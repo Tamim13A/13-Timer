@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>13 Send | Modern File Transfer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5649c9;
+            --secondary: #00cec9;
+            --accent: #ff7675;
+            --light: #ffffff;
+            --light-gray: #f8f9fa;
+            --dark: #2d3436;
+            --card-bg: #ffffff;
+            --text: #2d3436;
+            --text-light: #636e72;
+            --border: #e0e0e0;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        .dark-mode {
+            --light: #121212;
+            --light-gray: #1e1e1e;
+            --card-bg: #1e1e1e;
+            --text: #f8f9fa;
+            --text-light: #b2bec3;
+            --border: #333333;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+            transition: var(--transition);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 20px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: var(--transition);
+            background-color: var(--light);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.8rem;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--primary);
+        }
+
+        .logo .number {
+            background: var(--primary);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            background-color: var(--light-gray);
+        }
+
+        .theme-toggle:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .main-content {
+            padding: 60px 0;
+        }
+
+        .hero {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto 60px;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 20px;
+            font-weight: 800;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 35px;
+            margin-bottom: 40px;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .card-header i {
+            font-size: 1.8rem;
+            color: var(--primary);
+        }
+
+        .card-header h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        /* Upload area styles */
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: var(--border-radius);
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            background-color: var(--light-gray);
+        }
+
+        .upload-area:hover, .upload-area.drag-over {
+            border-color: var(--primary);
+            background-color: rgba(108, 92, 231, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 3.5rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+            transition: var(--transition);
+        }
+
+        .upload-area h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .upload-area p {
+            color: var(--text-light);
+            margin-bottom: 20px;
+        }
+
+        .browse-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .browse-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+
+        #file-input {
+            display: none;
+        }
+
+        /* Progress area */
+        .progress-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 15px;
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+        }
+
+        .file-icon {
+            font-size: 2.2rem;
+            color: var(--primary);
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            word-break: break-all;
+        }
+
+        .file-size {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .progress-wrapper {
+            margin: 30px 0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            border-radius: 10px;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 14px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: var(--transition);
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 2px solid var(--text-light);
+            color: var(--text);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Results section */
+        .results-container {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .link-box {
+            background-color: var(--light-gray);
+            border-radius: var(--border-radius);
+            padding: 15px;
+            display: flex;
+            margin: 30px 0;
+            border: 1px solid var(--border);
+        }
+
+        .link-input {
+            flex: 1;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            color: var(--text);
+            padding: 8px 12px;
+            outline: none;
+            font-family: monospace;
+        }
+
+        .copy-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .copy-btn:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .success-icon {
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .success-icon i {
+            font-size: 4rem;
+            color: var(--secondary);
+            background-color: rgba(0, 206, 201, 0.1);
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 40px 0;
+            text-align: center;
+            background-color: var(--light-gray);
+            color: var(--text-light);
+            transition: var(--transition);
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .tagline {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+
+        .copyright {
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.3rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            .card {
+                padding: 25px;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .upload-area {
+                padding: 30px 15px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .upload-area i {
+                font-size: 3rem;
+            }
+            
+            .upload-area h3 {
+                font-size: 1.3rem;
+            }
+            
+            .logo {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="number">13</div>
+                    <span>Send</span>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <div class="hero">
+                <h1>Effortless Large File Transfer</h1>
+                <p>Send files up to 100GB securely without any interruptions. Fast, reliable, and completely free.</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h2>Upload Your File</h2>
+                </div>
+
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3>Drag & Drop your files here</h3>
+                    <p>Maximum file size: 100GB • Supports all file types</p>
+                    <button class="browse-btn">Browse Files</button>
+                    <input type="file" id="fileInput">
+                </div>
+
+                <div class="progress-container" id="progressContainer">
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="file-details">
+                            <div class="file-name" id="fileName">project_document.pdf</div>
+                            <div class="file-size" id="fileSize">150 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="progress-wrapper">
+                        <div class="progress-header">
+                            <span>Uploading...</span>
+                            <span id="progressPercent">0%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+
+                    <div class="controls">
+                        <button class="btn btn-outline" id="pauseBtn">
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button class="btn btn-primary" id="cancelBtn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+
+                <div class="results-container" id="resultsContainer">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h2 style="text-align: center; margin-bottom: 20px;">Upload Complete!</h2>
+                    
+                    <div class="file-info">
+                        <div class="file-icon">
+                            <i class="fas fa-file-alt"></i>
+                        </div>
+                        <div class="file-details">
+                            <div class="file-name" id="resultFileName">project_document.pdf</div>
+                            <div class="file-size" id="resultFileSize">150 MB</div>
+                        </div>
+                    </div>
+
+                    <div class="link-box">
+                        <input type="text" class="link-input" id="shareLink" value="https://13send.com/share/ak9e2kd02l" readonly>
+                        <button class="copy-btn" id="copyBtn">Copy Link</button>
+                    </div>
+
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn btn-primary" id="newUploadBtn">
+                            <i class="fas fa-plus"></i> Upload Another File
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-shield-alt"></i>
+                    <h2>Secure & Reliable</h2>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px;">
+                    <div style="display: flex; gap: 15px;">
+                        <div style="color: var(--primary); font-size: 1.5rem;">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 8px;">End-to-End Encryption</h3>
+                            <p style="color: var(--text-light);">All files are encrypted during transfer for maximum security.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <div style="color: var(--primary); font-size: 1.5rem;">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 8px;">Fast Transfers</h3>
+                            <p style="color: var(--text-light);">Optimized for high-speed transfers of large files.</p>
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <div style="color: var(--primary); font-size: 1.5rem;">
+                            <i class="fas fa-infinity"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 8px;">No Size Limits</h3>
+                            <p style="color: var(--text-light);">Transfer files up to 100GB without restrictions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="tagline">By 13 UPB </div>
+                <p class="tagline">13 != Unlucky Number.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM Elements
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const progressContainer = document.getElementById('progressContainer');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const themeToggle = document.getElementById('themeToggle');
+            const progressFill = document.getElementById('progressFill');
+            const progressPercent = document.getElementById('progressPercent');
+            const pauseBtn = document.getElementById('pauseBtn');
+            const cancelBtn = document.getElementById('cancelBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const newUploadBtn = document.getElementById('newUploadBtn');
+            const fileName = document.getElementById('fileName');
+            const fileSize = document.getElementById('fileSize');
+            const resultFileName = document.getElementById('resultFileName');
+            const resultFileSize = document.getElementById('resultFileSize');
+            const shareLink = document.getElementById('shareLink');
+
+            // State variables
+            let isUploading = false;
+            let isPaused = false;
+            let progress = 0;
+            let uploadInterval;
+
+            // Theme toggle
+            themeToggle.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const icon = themeToggle.querySelector('i');
+                if (document.body.classList.contains('dark-mode')) {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            });
+
+            // File selection
+            uploadArea.addEventListener('click', () => {
+                fileInput.click();
+            });
+
+            // Drag and drop functionality
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, preventDefaults, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadArea.addEventListener(eventName, unhighlight, false);
+            });
+
+            function highlight() {
+                uploadArea.classList.add('drag-over');
+            }
+
+            function unhighlight() {
+                uploadArea.classList.remove('drag-over');
+            }
+
+            uploadArea.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            fileInput.addEventListener('change', () => {
+                handleFiles(fileInput.files);
+            });
+
+            // Handle selected files
+            function handleFiles(files) {
+                if (files.length === 0) return;
+                
+                const file = files[0];
+                const fileSizeMB = file.size / (1024 * 1024);
+                
+                // Check file size (dummy check for demo)
+                if (fileSizeMB > 102400) { // 100GB in MB
+                    alert('File size exceeds 100GB limit. Please select a smaller file.');
+                    return;
+                }
+                
+                // Display file info
+                const sizeText = fileSizeMB > 1024 
+                    ? `${(fileSizeMB / 1024).toFixed(1)} GB` 
+                    : `${Math.round(fileSizeMB)} MB`;
+                
+                fileName.textContent = file.name;
+                fileSize.textContent = sizeText;
+                resultFileName.textContent = file.name;
+                resultFileSize.textContent = sizeText;
+                
+                // Show progress container
+                uploadArea.style.display = 'none';
+                progressContainer.style.display = 'block';
+                
+                // Start upload simulation
+                startUpload();
+            }
+
+            // Simulate file upload
+            function startUpload() {
+                isUploading = true;
+                isPaused = false;
+                progress = 0;
+                updateProgress();
+                
+                uploadInterval = setInterval(() => {
+                    if (!isPaused) {
+                        progress += Math.random() * 5;
+                        if (progress >= 100) {
+                            progress = 100;
+                            clearInterval(uploadInterval);
+                            uploadComplete();
+                        }
+                        updateProgress();
+                    }
+                }, 300);
+            }
+
+            function updateProgress() {
+                progressFill.style.width = `${progress}%`;
+                progressPercent.textContent = `${Math.round(progress)}%`;
+            }
+
+            // Pause/resume functionality
+            pauseBtn.addEventListener('click', () => {
+                if (!isUploading) return;
+                
+                isPaused = !isPaused;
+                const icon = pauseBtn.querySelector('i');
+                const text = pauseBtn.querySelector('span');
+                
+                if (isPaused) {
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                    text.textContent = ' Resume';
+                } else {
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                    text.textContent = ' Pause';
+                }
+            });
+
+            // Cancel upload
+            cancelBtn.addEventListener('click', () => {
+                if (isUploading) {
+                    clearInterval(uploadInterval);
+                    isUploading = false;
+                }
+                resetUpload();
+            });
+
+            // Upload complete
+            function uploadComplete() {
+                isUploading = false;
+                progressContainer.style.display = 'none';
+                resultsContainer.style.display = 'block';
+                
+                // Generate a unique shareable link (dummy)
+                const uniqueId = Math.random().toString(36).substr(2, 10);
+                shareLink.value = `https://13send.com/share/${uniqueId}`;
+            }
+
+            // Copy link to clipboard
+            copyBtn.addEventListener('click', () => {
+                shareLink.select();
+                document.execCommand('copy');
+                
+                // Show feedback
+                const originalText = copyBtn.textContent;
+                copyBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyBtn.textContent = originalText;
+                }, 2000);
+            });
+
+            // New upload
+            newUploadBtn.addEventListener('click', resetUpload);
+
+            // Reset upload state
+            function resetUpload() {
+                isUploading = false;
+                isPaused = false;
+                progress = 0;
+                clearInterval(uploadInterval);
+                
+                fileInput.value = '';
+                uploadArea.style.display = 'block';
+                progressContainer.style.display = 'none';
+                resultsContainer.style.display = 'none';
+                
+                // Reset pause button
+                const icon = pauseBtn.querySelector('i');
+                const text = pauseBtn.querySelector('span');
+                icon.classList.remove('fa-play');
+                icon.classList.add('fa-pause');
+                text.textContent = ' Pause';
+            }
+        });
+    </script>
+</body>
+</html>
